@@ -1,65 +1,124 @@
-<h1 align="center">
-    <img src="https://raw.githubusercontent.com/bjsi/open-recommender/main/img/logo.webp" alt="Open Recommender Logo" height="200">
-    <br/>
-    Open Recommender - An open source AI-powered recommendation system for videos and articles
-</h1>
+# Open Recommender — Open Source AI Recommendation System for Videos & Articles
 
-<h3 align="center">⚠️ Work in Progress... ⚠️</h3>
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-## 🚀 Overview
+<p align="center">
+  <img src="https://raw.githubusercontent.com/KuchikiRenji/open-recommender/main/img/logo.webp" alt="Open Recommender - AI powered recommendation system" width="200" height="200">
+</p>
 
-Welcome to Open Recommender, an open source AI-powered recommendation system for videos and articles.
+<p align="center">
+  <strong>Open Recommender</strong> is an open source, AI-powered recommendation engine that discovers videos and articles tailored to your interests using LLMs and your engagement data.
+</p>
 
-## 🏆 Goals
+---
 
-- Understand your current interests by analyzing things like your Twitter engagement (likes, retweets, etc.) and other data sources.
-- Search the web for interesting content to recommend to you
-- Recommend interesting sections from videos
-- Recommend "timeless" content rather than "trending" content
-- Surface "niche bangers" - difficult to find but really high quality content
-- Biased towards learning as opposed to entertainment
-- Read my blog post for more: [Building an LLM-Powered Open Source Recommendation System for YouTube](https://dev.to/experilearning/building-an-llm-powered-open-source-recommendation-system-40fg)
-- [Create a system that borrows the best elements from YouTube Shorts, TikTok and incremental reading to create something that feels as effortless and engaging as a queue of YouTube shorts but actually helps you make progress towards meaningful goals](https://experimentallearning.substack.com/p/from-spaced-repetition-systems-to)
+## What is Open Recommender?
 
-## How to Run
+**Open Recommender** is a self-hosted, open source recommendation system that uses large language models (LLMs) to recommend YouTube videos and web articles. It learns from your Twitter/X engagement (likes, retweets), builds a profile, generates search queries, and surfaces high-quality, timeless content—including niche content that’s hard to find—with a bias toward learning over pure entertainment.
+
+Ideal for developers, researchers, and learners who want personalized content discovery without relying on closed algorithms.
+
+---
+
+## Features
+
+- **Interest-based profiling** — Infers your interests from Twitter/X engagement (likes, retweets, etc.) and other data sources  
+- **LLM-powered search** — Generates and runs search queries from your profile to find relevant videos and articles  
+- **Video clip recommendations** — Recommends specific sections of videos, not just full videos  
+- **Timeless over trending** — Prioritizes lasting, educational content over short-lived trends  
+- **Niche discovery** — Surfaces “niche bangers”: high-quality content that’s difficult to find elsewhere  
+- **Learning-first** — Tuned for learning and growth rather than pure entertainment  
+- **Self-hosted & open source** — Full control over data and logic; no vendor lock-in  
+
+---
+
+## Tech Stack
+
+- **Backend:** Node.js, tRPC, Prisma, Python (workers)  
+- **Frontend:** React, TypeScript  
+- **AI/LLM:** Modelfusion, LangChain, OpenAI-compatible APIs  
+- **Data:** Twitter/X (optional), YouTube (via yt-dlp), web search  
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (with Yarn)
+- Python 3
+- (Optional) Twitter/X account for interest profiling
 
 ### Installation
 
-- `git clone` this repo
-- `cd open-recommender`
-- `yarn && yarn build`
-- `python3 -m venv env`
-- `source env/bin/activate`
-- `pip install -r requirements.txt`
-- In the client, server and cli packages, `cp .env.example .env` and fill in the values
-- If you want to use Twitter as an input data source for recommendations, you need to create a fake Twitter account and create an `accounts.txt` file in the root folder with the account's credentials in the format `username:password:email:email_password`.
+```bash
+git clone https://github.com/KuchikiRenji/open-recommender.git
+cd open-recommender
+yarn && yarn build
+python3 -m venv env
+source env/bin/activate   # On Windows: env\Scripts\activate
+pip install -r requirements.txt
+```
 
-### Running
+In `packages/client`, `packages/server`, and `packages/cli`, copy env templates and fill in your values:
 
-- `yarn server` to run the backend
-- `yarn client` to run the frontend
-- `yarn worker` to run the background job worker
-- Open up the web client and click the login button in the top right.
-- After logging in using Twitter this will automatically trigger a new recommendations pipeline run task for the worker.
-- You can monitor a recommendations pipeline run using by navigating to http://localhost:5173/#/admin. Make sure you set ADMIN="Your Twitter Username" in the server `.env` file.
-- After a run is finished you can view your queue of recommendations by navigating to your feed.
+```bash
+cp .env.example .env
+# Edit each .env with your API keys and config
+```
 
-### Commands
+**Optional — Twitter as input:** Create an `accounts.txt` in the project root with credentials in the format:  
+`username:password:email:email_password`
 
-## 📚 How it Works
+### Run the stack
 
-A summary of the data pipeline:
+```bash
+yarn server    # Backend API
+yarn client    # Frontend (e.g. http://localhost:5173)
+yarn worker    # Background recommendation pipeline
+```
 
-- Download a user's Twitter data (tweets, likes, retweets, etc.)
-- Recursively summarize into a user profile
-- Generate search queries using the user's profile
-- Search for videos and articles based using the queries
-- Download transcripts and articles and chunk them into "clips"
-- Recommend the best clips to the user in clusters (like mini learning playlists)
+1. Open the web client and log in (top right).  
+2. After Twitter login, a recommendations pipeline run is triggered automatically.  
+3. Monitor runs at: `http://localhost:5173/#/admin` (set `ADMIN="YourTwitterUsername"` in server `.env`).  
+4. View your recommendation feed when the run finishes.
 
-## Papers and Blog Posts
+---
 
-- [Building an LLM-Powered Open Source Recommendation System for YouTube](https://dev.to/experilearning/building-an-llm-powered-open-source-recommendation-system-40fg)
-- [BookGPT: A General Framework for Book Recommendation Based on a Large Language Model](https://arxiv.org/pdf/2305.15673.pdf)
-- [A Survey on Large Language Models for Recommendation](https://arxiv.org/abs/2305.19860)
-- [Recommender Systems in the Era of Large Language Models (LLMs)](https://arxiv.org/abs/2307.02046)
+## How It Works
+
+1. **Profile** — Downloads your Twitter data (tweets, likes, retweets) and recursively summarizes it into a user profile.  
+2. **Queries** — Uses your profile to generate search queries.  
+3. **Search** — Finds videos and articles from the web based on those queries.  
+4. **Chunking** — Downloads transcripts and articles and splits them into “clips.”  
+5. **Recommendation** — Ranks and recommends the best clips, grouped into mini learning playlists.
+
+---
+
+## References & Further Reading
+
+- [Building an LLM-Powered Open Source Recommendation System for YouTube](https://dev.to/experilearning/building-an-llm-powered-open-source-recommendation-system-40fg)  
+- [Create a system that borrows from Shorts, TikTok and incremental reading](https://experimentallearning.substack.com/p/from-spaced-repetition-systems-to)  
+- [BookGPT: A General Framework for Book Recommendation Based on a Large Language Model](https://arxiv.org/pdf/2305.15673.pdf)  
+- [A Survey on Large Language Models for Recommendation](https://arxiv.org/abs/2305.19860)  
+- [Recommender Systems in the Era of Large Language Models (LLMs)](https://arxiv.org/abs/2307.02046)  
+
+---
+
+## Author & Contact
+
+**KuchikiRenji**
+
+- **GitHub:** [github.com/KuchikiRenji](https://github.com/KuchikiRenji)  
+- **Email:** [KuchikiRenji@outlook.com](mailto:KuchikiRenji@outlook.com)  
+- **Discord:** `kuchiki_renji`  
+
+---
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+*Open Recommender — open source AI recommendation system for YouTube videos and articles | LLM-powered | Self-hosted | KuchikiRenji*
